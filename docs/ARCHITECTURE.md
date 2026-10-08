@@ -86,10 +86,14 @@ Le cache décore **chaque fournisseur réseau**, pas la chaîne : sinon un repli
 | Composant | Durée de vie | Raison |
 |---|---|---|
 | `InMemoryCache` | Singleton | état partagé pour toute l'application ; instance injectée, aucun `static` |
+| `TimeProvider` (horloge du cache) | Singleton | horloge injectée plutôt que lue dans le contexte d'exécution ; remplacée par une horloge pilotée en test |
+| `NotificationPolicy`, `WakeUpDefaults` | Singleton | valeurs immuables lues une fois dans la configuration |
 | Adaptateurs, décorateurs, dispatcher, resolver, `WakeUpService` | Transient | services légers et sans état |
 | `HttpClient` | géré par `IHttpClientFactory` | réutilisation des connexions |
 
 Aucun Singleton ne reçoit de service Scoped : pas de dépendance captive.
+
+La composition root est `CompositionRoot.AddReveilMusical` (projet Host). Les fournisseurs musicaux sont des keyed services (`itunes`, `musicbrainz`, `local`) ; la chaîne est assemblée depuis `Music:Providers`, et un nom inconnu arrête l'application au démarrage en listant les noms valides. Le service de préférences brut est enregistré sous la clé `source`, puis décoré.
 
 ## 5. Contrats de résilience
 
