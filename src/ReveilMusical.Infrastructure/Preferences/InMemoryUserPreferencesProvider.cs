@@ -9,7 +9,7 @@ namespace ReveilMusical.Infrastructure.Preferences;
 /// </summary>
 internal sealed class InMemoryUserPreferencesProvider : IUserPreferencesProvider
 {
-    private static readonly IReadOnlyDictionary<string, UserPreferences> Users = new Dictionary<string, UserPreferences>(StringComparer.OrdinalIgnoreCase)
+    private readonly IReadOnlyDictionary<string, UserPreferences> _users = new Dictionary<string, UserPreferences>(StringComparer.OrdinalIgnoreCase)
     {
         ["alice"] = new(
             new Dictionary<WeatherType, string>
@@ -47,7 +47,7 @@ internal sealed class InMemoryUserPreferencesProvider : IUserPreferencesProvider
     {
         ct.ThrowIfCancellationRequested();
 
-        return Users.TryGetValue(userId.Trim(), out var preferences)
+        return _users.TryGetValue(userId.Trim(), out var preferences)
             ? Task.FromResult(preferences)
             : Task.FromException<UserPreferences>(new UserNotFoundException(userId));
     }

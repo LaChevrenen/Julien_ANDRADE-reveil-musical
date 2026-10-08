@@ -8,7 +8,7 @@ namespace ReveilMusical.Application;
 /// </summary>
 public sealed class WakeUpMessageComposer
 {
-    private static readonly IReadOnlyDictionary<DayOfWeek, string> Days = new Dictionary<DayOfWeek, string>
+    private readonly IReadOnlyDictionary<DayOfWeek, string> _days = new Dictionary<DayOfWeek, string>
     {
         [DayOfWeek.Monday] = "lundi",
         [DayOfWeek.Tuesday] = "mardi",
@@ -19,7 +19,7 @@ public sealed class WakeUpMessageComposer
         [DayOfWeek.Sunday] = "dimanche",
     };
 
-    private static readonly IReadOnlyDictionary<WeatherType, string> Weathers = new Dictionary<WeatherType, string>
+    private readonly IReadOnlyDictionary<WeatherType, string> _weathers = new Dictionary<WeatherType, string>
     {
         [WeatherType.Soleil] = "il fait soleil",
         [WeatherType.Pluie] = "il pleut",
@@ -29,8 +29,8 @@ public sealed class WakeUpMessageComposer
 
     public WakeUpMessage Compose(DayOfWeek day, WeatherType weather, Track track)
     {
-        var dayText = Days.TryGetValue(day, out var d) ? $"Nous sommes {d}" : "C'est l'heure";
-        var weatherText = Weathers.TryGetValue(weather, out var w) ? $" et {w}" : string.Empty;
+        var dayText = _days.TryGetValue(day, out var d) ? $"Nous sommes {d}" : "C'est l'heure";
+        var weatherText = _weathers.TryGetValue(weather, out var w) ? $" et {w}" : string.Empty;
         var artistText = string.IsNullOrWhiteSpace(track.Artist) ? string.Empty : $" de {track.Artist}";
 
         return new WakeUpMessage(

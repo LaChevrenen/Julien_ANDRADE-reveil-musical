@@ -8,25 +8,6 @@ public static class WakeUpArguments
     public const string Usage =
         "Usage : <userId> <jour> <météo> — jour : lundi..dimanche ; météo : SOLEIL, PLUIE, NEIGE, NUAGEUX.";
 
-    private static readonly IReadOnlyDictionary<string, DayOfWeek> Days = new Dictionary<string, DayOfWeek>(StringComparer.OrdinalIgnoreCase)
-    {
-        ["lundi"] = DayOfWeek.Monday,
-        ["mardi"] = DayOfWeek.Tuesday,
-        ["mercredi"] = DayOfWeek.Wednesday,
-        ["jeudi"] = DayOfWeek.Thursday,
-        ["vendredi"] = DayOfWeek.Friday,
-        ["samedi"] = DayOfWeek.Saturday,
-        ["dimanche"] = DayOfWeek.Sunday,
-    };
-
-    private static readonly IReadOnlyDictionary<string, WeatherType> Weathers = new Dictionary<string, WeatherType>(StringComparer.OrdinalIgnoreCase)
-    {
-        ["soleil"] = WeatherType.Soleil,
-        ["pluie"] = WeatherType.Pluie,
-        ["neige"] = WeatherType.Neige,
-        ["nuageux"] = WeatherType.Nuageux,
-    };
-
     /// <summary>Arguments absents → valeurs par défaut ; argument invalide → <c>false</c> et message d'erreur.</summary>
     public static bool TryParse(IReadOnlyList<string> args, out WakeUpRequest request, out string error)
     {
@@ -34,24 +15,44 @@ public static class WakeUpArguments
         var positional = args.Where(a => !a.StartsWith('-')).ToList();
 
         var userId = positional.Count > 0 ? positional[0] : "alice";
-        var day = DayOfWeek.Monday;
-        var weather = WeatherType.Soleil;
-        request = new WakeUpRequest(userId, day, weather);
+        var day = positional.Count > 1 ? ParseDay(positional[1]) : DayOfWeek.Monday;
+        var weather = positional.Count > 2 ? ParseWeather(positional[2]) : WeatherType.Soleil;
+        request = new WakeUpRequest(userId, day ?? DayOfWeek.Monday, weather ?? WeatherType.Soleil);
 
-        if (positional.Count > 1 && !Days.TryGetValue(positional[1], out day))
+        if (day is null)
         {
             error = $"Jour inconnu : {positional[1]}. {Usage}";
             return false;
         }
 
-        if (positional.Count > 2 && !Weathers.TryGetValue(positional[2], out weather))
+        if (weather is null)
         {
             error = $"Météo inconnue : {positional[2]}. {Usage}";
             return false;
         }
 
-        request = new WakeUpRequest(userId, day, weather);
         error = string.Empty;
         return true;
     }
+
+    private static DayOfWeek? ParseDay(string text) => text.Trim().ToLowerInvariant() switch
+    {
+        "lundi" => DayOfWeek.Monday,
+        "mardi" => DayOfWeek.Tuesday,
+        "mercredi" => DayOfWeek.Wednesday,
+        "jeudi" => DayOfWeek.Thursday,
+        "vendredi" => DayOfWeek.Friday,
+        "samedi" => DayOfWeek.Saturday,
+        "dimanche" => DayOfWeek.Sunday,
+        _ => null,
+    };
+
+    private static WeatherType? ParseWeather(string text) => text.Trim().ToLowerInvariant() switch
+    {
+        "soleil" => WeatherType.Soleil,
+        "pluie" => WeatherType.Pluie,
+        "neige" => WeatherType.Neige,
+        "nuageux" => WeatherType.Nuageux,
+        _ => null,
+    };
 }

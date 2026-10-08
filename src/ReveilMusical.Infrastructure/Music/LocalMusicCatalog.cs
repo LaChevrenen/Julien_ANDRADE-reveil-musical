@@ -12,7 +12,7 @@ internal sealed class LocalMusicCatalog : IMusicCatalog
 {
     public const string SourceName = "local";
 
-    private static readonly IReadOnlyList<Track> Tracks =
+    private readonly IReadOnlyList<Track> _tracks =
     [
         new("Here Comes the Sun", "The Beatles", SourceName),
         new("Walking on Sunshine", "Katrina and the Waves", SourceName),
@@ -29,15 +29,15 @@ internal sealed class LocalMusicCatalog : IMusicCatalog
         return Task.FromResult<Track?>(Find(query));
     }
 
-    private static Track Find(string? query)
+    private Track Find(string? query)
     {
         var wanted = Normalize(query);
         if (wanted.Length == 0)
         {
-            return Tracks[0];
+            return _tracks[0];
         }
 
-        foreach (var track in Tracks)
+        foreach (var track in _tracks)
         {
             var title = Normalize(track.Title);
             if (title.Contains(wanted, StringComparison.Ordinal) || wanted.Contains(title, StringComparison.Ordinal))
@@ -46,7 +46,7 @@ internal sealed class LocalMusicCatalog : IMusicCatalog
             }
         }
 
-        return Tracks[0];
+        return _tracks[0];
     }
 
     /// <summary>Minuscules sans accents, indépendamment de la culture courante.</summary>

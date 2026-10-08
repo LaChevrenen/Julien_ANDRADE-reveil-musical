@@ -106,7 +106,7 @@ La composition root est `CompositionRoot.AddReveilMusical` (projet Host). Les fo
 ## 6. Dépendances cachées bannies
 
 - Pas de `DateTime.Now` : le jour arrive en entrée.
-- Pas de `static` mutable.
+- Aucun champ `static` non constant : l'état vit dans des instances gérées par le conteneur (vérifié par un test d'architecture).
 - Pas de lecture d'environnement hors du binding de configuration.
 - Pas de `CultureInfo` implicite : noms de jours et de météos dans des dictionnaires explicites.
 

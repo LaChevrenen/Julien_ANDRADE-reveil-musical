@@ -105,13 +105,13 @@ public class ArchitectureTests
     }
 
     [Fact]
-    public void Sources_AucunChampStatiqueMutable()
+    public void Sources_AucunChampStatiqueNonConstant()
     {
         var fautifs = new[] { Domain, Application, Infrastructure, Host }
             .SelectMany(assembly => assembly.GetTypes())
             .Where(type => !type.IsDefined(typeof(CompilerGeneratedAttribute)) && !type.Name.Contains('<'))
             .SelectMany(type => type.GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
-            .Where(field => !field.IsInitOnly && !field.IsLiteral && !field.Name.Contains('<'))
+            .Where(field => !field.IsLiteral && !field.Name.Contains('<'))
             .Select(field => $"{field.DeclaringType!.Name}.{field.Name}");
 
         Assert.Empty(fautifs);
