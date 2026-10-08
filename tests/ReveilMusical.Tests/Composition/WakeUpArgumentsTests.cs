@@ -18,6 +18,10 @@ public class WakeUpArgumentsTests
     [InlineData("vendredi", "PLUIE", DayOfWeek.Friday, WeatherType.Pluie)]
     [InlineData("Dimanche", "neige", DayOfWeek.Sunday, WeatherType.Neige)]
     [InlineData("MARDI", "Nuageux", DayOfWeek.Tuesday, WeatherType.Nuageux)]
+    [InlineData("lundi", "SOLEIL", DayOfWeek.Monday, WeatherType.Soleil)]
+    [InlineData("mercredi", "soleil", DayOfWeek.Wednesday, WeatherType.Soleil)]
+    [InlineData("jeudi", "pluie", DayOfWeek.Thursday, WeatherType.Pluie)]
+    [InlineData("samedi", "neige", DayOfWeek.Saturday, WeatherType.Neige)]
     public void TryParse_JourEtMeteoEnFrancais_SontReconnusSansTenirCompteDeLaCasse(
         string jour, string meteo, DayOfWeek jourAttendu, WeatherType meteoAttendue)
     {
