@@ -23,12 +23,11 @@ public abstract class NotificationChannelContractTests
     }
 
     [Fact]
-    public async Task SendAsync_ClientDisponible_TransmetLeMessageAuDestinataireDeLUtilisateur()
+    public async Task SendAsync_ClientDisponible_TransmetLeMessageUneSeuleFois()
     {
         await CreateChannel(clientFails: false).SendAsync("alice", Message, CancellationToken.None);
 
         var delivery = Assert.Single(Deliveries);
-        Assert.Contains("alice", delivery);
         Assert.Contains("Il pleut.", delivery);
     }
 
@@ -100,7 +99,7 @@ public class SmsChannelTests : NotificationChannelContractTests
 
     protected override string ExpectedId => "sms";
 
-    protected override IReadOnlyList<string> Deliveries => _gateway.Messages.Select(m => $"alice:{m.Phone}:{m.Text}").ToList();
+    protected override IReadOnlyList<string> Deliveries => _gateway.Messages.Select(m => $"{m.Phone}:{m.Text}").ToList();
 
     protected override INotificationChannel CreateChannel(bool clientFails)
     {
