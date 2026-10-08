@@ -52,10 +52,9 @@ public class LocalMusicCatalogTests
     }
 
     [Fact]
-    public async Task FindAsync_JetonAnnule_NeLevePas()
+    public async Task FindAsync_JetonAnnule_PropageLAnnulation()
     {
-        var track = await _catalog.FindAsync("Purple Rain", new CancellationToken(canceled: true));
-
-        Assert.NotNull(track);
+        await Assert.ThrowsAsync<OperationCanceledException>(
+            () => _catalog.FindAsync("Purple Rain", new CancellationToken(canceled: true)));
     }
 }

@@ -36,7 +36,7 @@ public sealed class ResilientTrackResolver : ITrackResolver
 
         _logger.LogWarning("Aucun fournisseur musical disponible pour « {Query} » : repli sur le catalogue local.", query);
 
-        // Le catalogue local ne peut pas échouer par contrat ; dernier filet si ce contrat était rompu.
+        // Par contrat, le catalogue local ne lève que sur annulation ; dernier filet si ce contrat était rompu.
         var local = await TryFindAsync(_local, query, ct) ?? new Track(query, string.Empty, "secours");
         return new TrackResolution(local, UsedLocalFallback: true);
     }

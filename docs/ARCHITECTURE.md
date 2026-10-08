@@ -57,7 +57,7 @@ graph LR
     P -->|panne ou inconnu| PD["préférences par défaut<br/>(configuration)"]
     R -->|1| C1["cache + iTunes"]
     R -->|2| C2["cache + MusicBrainz"]
-    R -->|dernier recours| L["LocalMusicCatalog<br/>(ne peut pas échouer)"]
+    R -->|dernier recours| L["LocalMusicCatalog<br/>(ne lève que sur annulation)"]
     D -->|1| N1["canal préféré"]
     D -->|2..n| N2["canaux de FallbackOrder"]
     D -->|tous en échec| N3["log Critical, ChannelUsed = null"]
@@ -98,9 +98,9 @@ La composition root est `CompositionRoot.AddReveilMusical` (projet Host). Les fo
 ## 5. Contrats de résilience
 
 - `IMusicCatalog.FindAsync` peut renvoyer `null` ou lever : un fournisseur « comme un autre ».
-- `ITrackResolver.ResolveAsync` garantit un `Track` : jamais `null`, jamais d'exception.
+- `ITrackResolver.ResolveAsync` garantit un `Track` : jamais `null`, jamais d'exception hors annulation.
 - `INotificationChannel.SendAsync` lève en cas d'échec.
-- `INotificationDispatcher.DispatchAsync` ne lève jamais ; `null` signifie que tous les canaux ont échoué.
+- `INotificationDispatcher.DispatchAsync` ne lève jamais hors annulation ; `null` signifie que tous les canaux ont échoué.
 - `IWakeUpService.SendWakeUpAsync` ne lève jamais pour une panne externe ; seule l'annulation (`OperationCanceledException`) est propagée.
 
 ## 6. Dépendances cachées bannies

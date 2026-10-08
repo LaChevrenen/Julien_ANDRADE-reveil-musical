@@ -6,7 +6,7 @@ using ReveilMusical.Domain;
 namespace ReveilMusical.Infrastructure.Music;
 
 /// <summary>
-/// Dernier recours : liste en dur. Ne renvoie jamais <c>null</c>, ne lève jamais.
+/// Dernier recours : liste en dur. Ne renvoie jamais <c>null</c> et ne lève que sur annulation.
 /// </summary>
 internal sealed class LocalMusicCatalog : IMusicCatalog
 {
@@ -25,6 +25,7 @@ internal sealed class LocalMusicCatalog : IMusicCatalog
 
     public Task<Track?> FindAsync(string query, CancellationToken ct)
     {
+        ct.ThrowIfCancellationRequested();
         return Task.FromResult<Track?>(Find(query));
     }
 

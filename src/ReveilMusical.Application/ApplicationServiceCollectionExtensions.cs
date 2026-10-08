@@ -5,7 +5,7 @@ namespace ReveilMusical.Application;
 /// <summary>Clés des services enregistrés par nom (keyed services).</summary>
 public static class ServiceKeys
 {
-    /// <summary>Catalogue de dernier recours, qui ne peut pas échouer.</summary>
+    /// <summary>Catalogue de dernier recours : ne lève que sur annulation.</summary>
     public const string LocalCatalog = "local";
 
     /// <summary>Service de préférences brut, avant décoration par les préférences par défaut.</summary>
