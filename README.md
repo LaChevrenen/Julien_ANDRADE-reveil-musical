@@ -154,13 +154,13 @@ Bibliothèques volontairement écartées : bibliothèques de mock, Polly, Scruto
 
 ## Tests et couverture
 
-198 tests, aucun appel réseau (HTTP simulé par `StubHttpMessageHandler`, simulateurs écrits à la main).
+202 tests, aucun appel réseau (HTTP simulé par `StubHttpMessageHandler`, simulateurs écrits à la main).
 
 - Tests unitaires par composant.
 - Tests de contrat réutilisés : `MusicCatalogContractTests` (iTunes et MusicBrainz) et `NotificationChannelContractTests` (email, SMS, push).
 - Test de composition : le vrai conteneur résout `IWakeUpService` ; l'ordre de `Music:Providers` change l'ordre des appels.
 - Scénarios de bout en bout « pas de silence ».
-- Tests d'architecture par réflexion : sens des dépendances, DTO fournisseurs `internal`, aucun nom de fournisseur ou de canal dans le domaine et l'application, aucun champ statique mutable.
+- Tests d'architecture par réflexion : sens des dépendances, DTO fournisseurs `internal`, aucun nom de fournisseur ou de canal dans le domaine et l'application, aucun champ statique non constant (l'état vit dans des instances gérées par le conteneur).
 
 ```
 dotnet test --collect:"XPlat Code Coverage"
@@ -173,9 +173,9 @@ Taux lus dans `coverage.cobertura.xml` (attribut `line-rate`), mesurés le 2026-
 | Domain | 100 % |
 | Application | 100 % |
 | Infrastructure | 100 % |
-| **Hors Host** | **100 %** (475 / 475) |
-| Host | 82,35 % (`Program.cs`, la console de démonstration, n'est pas testé) |
-| Global | 96,88 % |
+| **Hors Host** | **100 %** (476 / 476) |
+| Host | 82,52 % (`Program.cs`, la console de démonstration, n'est pas testé) |
+| Global | 96,89 % |
 
 ## Hypothèses
 
